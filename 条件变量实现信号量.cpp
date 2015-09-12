@@ -16,7 +16,7 @@ namespace karel
             std::unique_lock<std::mutex> lock(mtx);
             if (--count < 0) {
                 // 当前线程挂起
-                cdv.wait();
+                cdv.wait(lock);
             }
         }
         void signal() {

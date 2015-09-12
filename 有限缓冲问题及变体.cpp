@@ -7,6 +7,34 @@
  */
 
 // 1.单个生产者消费者问题
+int Process()
+{
+    karel::semaphore empty(1), full(0);
+    int buf = -1;
+    thread producer([&]() {
+        while (true) {
+            std::this_thread::sleep_for(chrono::milliseconds(500));
+            empty.wait();
+            // 生产过程
+            buf += 1;
+            printf("produce %d\n", buf);
+            full.signal();
+        }
+    });
+    thread consumer([&]() {
+        while (true) {
+            std::this_thread::sleep_for(chrono::milliseconds(500));
+            full.wait();
+            // 消费过程
+            printf("consume %d\n", buf);
+            empty.signal();
+        }
+    });
+    producer.join();
+    consumer.join();
+    return 0;
+}
+// 2.多生产者多消费者问题
 #define BUF_SIZE 12
 int Process()
 {
@@ -40,9 +68,6 @@ int Process()
     consumer.join();
     return 0;
 }
-
-// 2.多生产者多消费者问题
-// 1所示模型也可以解决多生产者多消费问题
 
 
 // 3.带transmitter的生产者消费者问题
