@@ -13,7 +13,6 @@ int Process()
     int buf = -1;
     thread producer([&]() {
         while (true) {
-            std::this_thread::sleep_for(chrono::milliseconds(500));
             empty.wait();
             // 生产过程
             buf += 1;
@@ -23,7 +22,6 @@ int Process()
     });
     thread consumer([&]() {
         while (true) {
-            std::this_thread::sleep_for(chrono::milliseconds(500));
             full.wait();
             // 消费过程
             printf("consume %d\n", buf);
@@ -81,7 +79,6 @@ int Process()
     karel::semaphore empty1(BUF_SIZE1), full1(0), empty2(BUF_SIZE2), full2(0);
     thread producer([&]() {
         do {
-            std::this_thread::sleep_for(chrono::milliseconds(500));
             empty1.wait();
             lock1.lock();
             // 生产
@@ -111,7 +108,6 @@ int Process()
     });
     thread consumer([&]() {
         do {
-            std::this_thread::sleep_for(chrono::milliseconds(500));
             full2.wait();
             lock2.lock();
             // 消费
